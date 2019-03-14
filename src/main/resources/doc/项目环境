@@ -1,0 +1,7 @@
+1、客户ecs：39.98.166.203  root   @lys123456
+2、开发环境磁盘满了:删除jenkins日志文件，重启jenkins
+/var/log/jenkins
+rm jenkins.log
+service jenkins restart
+3、客户机mysql root Lisuo@2018
+4、客户机redis安装参考文档：https://www.cnblogs.com/limit1/p/9045183.html redis密码：Lisuo@2018

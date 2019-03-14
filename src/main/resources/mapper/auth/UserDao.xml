@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.monitor.auth.dao.UserDao">
+
+    <select id="mySelect" resultType="com.monitor.auth.entity.User" parameterType="java.lang.Integer">
+        SELECT * FROM
+          t_user
+        WHERE
+          del_flag = 0
+        AND
+         id = #{id}
+    </select>
+
+    <select id="selectUserListPage" resultType="com.monitor.auth.vo.UserListOutVo">
+        SELECT
+          id,
+          name,
+          create_time,
+          login_status
+        FROM
+          t_user
+        WHERE
+          del_flag = 0
+
+    </select>
+
+
+    <select id="findByUserName" parameterType="java.lang.String" resultType="com.monitor.auth.entity.User">
+        SELECT
+          id,
+          name,
+          password,
+          type,
+          username,
+          enable,
+          create_time,
+          login_status,
+          salt
+        FROM
+          t_user
+        WHERE
+          del_flag = 0
+        AND
+          username = #{username}
+    </select>
+
+    <select id="queryUserInfo" resultType="com.monitor.auth.vo.QueryUserInfoOutVo" parameterType="java.lang.Long">
+        SELECT
+            id,
+            name,
+            username,
+            enable,
+            email,
+            company_email,
+            phone,
+            company
+        FROM
+          t_user
+        WHERE
+          del_flag = 0
+        AND
+          id = #{id}
+    </select>
+
+    <select id="selectUserProjectPage" resultType="com.monitor.business.vo.QueryUserListOutVo" parameterType="com.monitor.business.vo.QueryUserListInVo">
+        SELECT
+            u.id,
+            u.username,
+            u.name,
+            u.enable,
+            u.phone,
+            u.password,
+            u.ps,
+            u.type,
+            project_names
+        FROM
+            t_user u
+        WHERE
+            u.del_flag = 0
+        AND  u.type != 0
+        AND
+            id
+        IN
+        (SELECT DISTINCT up.user_id FROM t_user_project up
+        <if test="projectIds != null and projectIds.length > 0">where
+            up.project_id
+            IN
+            <foreach
+                    collection="projectIds" item="item" index="index"
+                         open="(" separator="," close=")">#{item}
+                </foreach>
+            </if>
+        )
+
+        <if test="type!=null and type!=''">
+            AND
+              u.type = #{type}
+        </if>
+        <if test="condition!=null and condition!=''">
+            AND(
+                u.phone LIKE CONCAT('%',#{condition},'%')
+              OR
+                u.name LIKE CONCAT('%',#{condition},'%')
+            )
+        ORDER BY create_time DESC
+        </if>
+
+
+    </select>
+
+</mapper>
