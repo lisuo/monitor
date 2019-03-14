@@ -63,5 +63,4 @@
 		user_id =#{userId}
 	</select>
 
-
 </mapper>
